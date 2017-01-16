@@ -18,13 +18,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by ReDI on 1/14/2017.
  */
 
 @Entity
-@Table(name = "COURSE", uniqueConstraints = {@UniqueConstraint(columnNames = {"COURSE_ID"})})
+@Table(name = "COURSE", uniqueConstraints = {@UniqueConstraint(columnNames = {"NAME"})})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = {"id"})
@@ -34,8 +35,8 @@ import java.util.Set;
 public class Course {
 
     @Id
-    @Column(name = "COURSE_ID")
-    private String id;
+    @Column(name = "ID")
+    private UUID id;
 
     @Column(name = "NAME")
     private String name;

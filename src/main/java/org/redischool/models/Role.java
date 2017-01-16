@@ -14,12 +14,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by ReDI on 1/16/2017.
  */
 @Entity
-@Table(name = "ROLE", uniqueConstraints = {@UniqueConstraint(columnNames = {"ROLE_ID"})})
+@Table(name = "ROLE", uniqueConstraints = {@UniqueConstraint(columnNames = {"NAME"})})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = {"id"})
@@ -27,8 +28,8 @@ import java.util.Set;
 @Getter
 public class Role {
     @Id
-    @Column(name = "ROLE_ID")
-    private String id;
+    @Column(name = "ID")
+    private UUID id;
 
     @Column(name = "NAME")
     private String name;

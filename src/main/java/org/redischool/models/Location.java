@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.Set;
 
 /**
@@ -21,7 +20,7 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "LOCATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"LOCATION_ID"})})
+@Table(name = "LOCATION")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = {"id"})
@@ -30,7 +29,7 @@ import java.util.Set;
 
 public class Location {
     @Id
-    @Column(name = "LOCATION_ID")
+    @Column(name = "ID")
     private String id;
 
     @Column(name = "NAME")

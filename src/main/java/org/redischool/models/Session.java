@@ -13,14 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.util.UUID;
 
 /**
  * Created by ReDI on 1/15/2017.
  */
 
 @Entity
-@Table(name = "SESSION", uniqueConstraints = {@UniqueConstraint(columnNames = {"SESSION_ID"})})
+@Table(name = "SESSION")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = {"id"})
@@ -28,8 +28,8 @@ import javax.persistence.UniqueConstraint;
 @Getter
 public class Session {
     @Id
-    @Column(name = "SESSION_ID")
-    private String id;
+    @Column(name = "ID")
+    private UUID id;
 
     @Column(name = "TITLE")
     private String title;

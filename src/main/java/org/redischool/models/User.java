@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -19,40 +19,49 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by ReDI on 1/14/2017.
  */
 @Entity
-@Table(name = "USER", uniqueConstraints = @UniqueConstraint(columnNames = {"USER_ID"}))
+@Table(name = "USER", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL"}))
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = {"id"})
 @Builder(toBuilder = true)
 @Getter
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "USER_ID")
-    private String id;
 
-    @Column(name = "FIRST_NAME")
+    @Id
+    @Column(name = "ID")
+    private UUID id;
+
+    @Column(name = "EMAIL", nullable = false)
+    private String email;
+
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
+
+    @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
 
-    @Column(name = "LAST_NAME")
+    @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
-    @Column(name = "BIRTH_DATE")
-    private String birthDate;
+    @Column(name = "BIRTH_DATE", nullable = false)
+    private LocalDate birthDate;
 
-    @Column(name = "ADDRESS")
+    @Column(name = "ADDRESS", nullable = false)
     private String address;
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
-    @Column(name = "USER_TYPE")
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "USER_TYPE", nullable = false)
     private UserType userType;
 
 

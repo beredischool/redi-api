@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.UUID;
 
 /**
  * Created by ReDI on 1/14/2017.
@@ -27,8 +28,8 @@ import javax.persistence.UniqueConstraint;
 @Getter
 public class Attendance {
     @Id
-    @Column(name = "ATTENDANCE_ID")
-    private String id;
+    @Column(name = "ID")
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
