@@ -26,7 +26,6 @@ import java.util.Set;
 @EqualsAndHashCode(of = {"id"})
 @Builder(toBuilder = true)
 @Getter
-
 public class Location {
     @Id
     @Column(name = "ID")

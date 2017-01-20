@@ -19,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
@@ -64,6 +65,12 @@ public class User {
     @Column(name = "USER_TYPE", nullable = false)
     private UserType userType;
 
+    @Column(name = "ACTIVE", nullable = false)
+    private boolean active;
+
+    @Version
+    @Column(name = "VERSION", nullable = false)
+    private Integer version;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Contact> contacts;
@@ -76,4 +83,5 @@ public class User {
             joinColumns = {@JoinColumn(name = "USER_ID")},
             inverseJoinColumns = {@JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles;
+
 }
