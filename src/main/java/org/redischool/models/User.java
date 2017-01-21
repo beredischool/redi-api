@@ -52,7 +52,7 @@ public class User {
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
-    @Column(name = "BIRTH_DATE", nullable = false)
+    @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
 
     @Column(name = "ADDRESS", nullable = false)
@@ -65,11 +65,10 @@ public class User {
     @Column(name = "USER_TYPE", nullable = false)
     private UserType userType;
 
-    @Column(name = "ACTIVE", nullable = false)
+    @Column(name = "ACTIVE")
     private boolean active;
 
     @Version
-    @Column(name = "VERSION", nullable = false)
     private Integer version;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

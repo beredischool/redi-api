@@ -34,6 +34,7 @@ public class UserService extends AbstractService {
         return userRepository.save(users);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     @Transactional
     public User findById(UUID id) {
         User user = userRepository.findOne(id);

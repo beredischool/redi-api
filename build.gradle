@@ -33,8 +33,10 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-jersey')
+	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 	runtime('mysql:mysql-connector-java')
 	compileOnly('org.projectlombok:lombok')
-	testCompile('com.h2database:h2')
+	compileOnly('com.google.code.findbugs:annotations:3.0.1')
+	compile('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
