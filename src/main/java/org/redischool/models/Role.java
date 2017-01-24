@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -34,6 +32,6 @@ public class Role {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+/*    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;*/
 }

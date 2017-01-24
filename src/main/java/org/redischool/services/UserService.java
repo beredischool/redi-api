@@ -1,6 +1,7 @@
 package org.redischool.services;
 
 import org.redischool.models.User;
+import org.redischool.models.UserType;
 import org.redischool.services.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class UserService extends AbstractService {
     @Transactional
     public User findById(UUID id) {
         User user = userRepository.findOne(id);
-        user.getRoles().size();
+//        user.getRoles().size();
         user.getContacts().size();
         user.getCourses().size();
         return user;
@@ -46,13 +47,52 @@ public class UserService extends AbstractService {
 
     @Transactional
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+        //      user.getRoles().size();
+        user.getContacts().size();
+        user.getCourses().size();
+        return user;
     }
 
     @Transactional
     public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        Page<User> users = userRepository.findAll(pageable);
+
+        for (int i = 0; i < users.getContent().size(); i++) {
+            users.getContent().get(i).getContacts().size();
+            users.getContent().get(i).getCourses().size();
+        }
+        return users;
+    }
+
+    @Transactional
+    public User login(String email, String password) {
+        User user = userRepository.findByEmailAndPassword(email, password);
+        user.getContacts().size();
+        user.getCourses().size();
+
+
+        if (user == null) {
+            return null;
+        }
+        return user;
+
     }
 
 
+    @Transactional
+    public User signUp(UUID id, String email, String password,
+                       String firstName, String lastName, String address,
+                       String description, UserType userType,
+                       Boolean active) {
+
+        User user = userRepository.save(User.builder().id(id).email(email).password(password).
+                firstName(firstName).lastName(lastName).address(address).
+                description(description).userType(userType).active(active).build());
+
+//        user.getContacts().size();
+        //      user.getCourses().size();
+
+        return user;
+    }
 }

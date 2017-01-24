@@ -6,11 +6,11 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 @EntityScan(basePackages = {"org.redischool.model"},
-		basePackageClasses = { App.class, Jsr310JpaConverters.class })
+        basePackageClasses = {App.class, Jsr310JpaConverters.class})
 @SpringBootApplication
 public class App {
 
-	public static void main(String[] args) {
-		SpringApplication.run(App.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
 }
