@@ -1,13 +1,17 @@
 package org.redischool.integration;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redischool.App;
 import org.redischool.models.User;
 import org.redischool.models.UserType;
 import org.redischool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.ws.rs.client.Client;
@@ -22,16 +26,22 @@ import javax.ws.rs.core.Response;
  * Created by ReDI on 1/20/2017.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = App.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserHTTPTest {
 
     Client client = ClientBuilder.newClient();
-
+    @LocalServerPort
+    private int port;
     @Autowired
     private UserService userService;
 
-    private String basic_url = "http://localhost:8080/api/user/";
+    private String basic_url = null;
 
+    @Before
+    public void setUp() {
+        basic_url = "http://localhost:" + port + "/api/user/";
+    }
     User creatUser() {
 
         User user = User.builder().id(userService.generateId())
@@ -119,6 +129,33 @@ public class UserHTTPTest {
 
 
     @Test
+    public void shouldExecuteSuccessfulGetByUserType() {
+
+        User user = creatUser();
+
+        String put_url = basic_url + user.getId().toString();
+        String userType_url = basic_url + "userType/";
+
+        //post
+        WebTarget target = client.target(basic_url);
+        Response response = target.request().post(Entity.entity(user, MediaType.APPLICATION_JSON));
+        Assert.assertEquals(201, response.getStatus());
+        String locationHeader = response.getHeaders().getFirst("Location").toString();
+        Assert.assertTrue(locationHeader.endsWith(response.readEntity(String.class)));
+
+        //put
+        target = client.target(put_url);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(user));
+        Assert.assertEquals(200, response.getStatus());
+
+        //get
+        target = client.target(userType_url);
+        response = target.queryParam("userType", user.getUserType()).request(MediaType.APPLICATION_JSON).get();
+        Assert.assertEquals(200, response.getStatus());
+    }
+
+
+    @Test
     public void shouldExecuteSuccessfulGetAll() {
 
         User user = creatUser();
@@ -189,6 +226,28 @@ public class UserHTTPTest {
 
 
     @Test
+    public void shouldReturnBadRequestDuringSignUp() {
+        String sign_up_url = basic_url + "sign_up/";
+
+        //sign up
+        WebTarget target = client.target(sign_up_url);
+
+        Form form = new Form();
+        form.param("email", "sbaihi.alaa@gmail.com");
+        form.param("password", "1234");
+        form.param("firstName", "Alaa");
+        form.param("lastName", "SBAIHI");
+        form.param("address", "Pestalozzistr 6, 10625 Berlin");
+        form.param("description", "lerner");
+        form.param("userType", UserType.STUDENT.toString());
+        form.param("passwordConfirm", "1243");
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+        Assert.assertEquals(400, response.getStatus());
+    }
+
+
+    @Test
     public void shouldExecuteSuccessfulSignUp() {
         String sign_up_url = basic_url + "sign_up/";
 
@@ -203,11 +262,9 @@ public class UserHTTPTest {
         form.param("address", "Pestalozzistr 6, 10625 Berlin");
         form.param("description", "lerner");
         form.param("userType", UserType.STUDENT.toString());
-        form.param("active", String.valueOf(true));
+        form.param("passwordConfirm", "1234");
 
         Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
         Assert.assertEquals(200, response.getStatus());
     }
-
-
 }

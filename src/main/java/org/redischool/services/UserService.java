@@ -1,5 +1,6 @@
 package org.redischool.services;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.redischool.models.User;
 import org.redischool.models.UserType;
 import org.redischool.services.repositories.UserRepository;
@@ -15,6 +16,7 @@ import java.util.UUID;
 /**
  * Created by aurel on 16/01/17.
  */
+@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
 @Service
 public class UserService extends AbstractService {
 
@@ -35,7 +37,6 @@ public class UserService extends AbstractService {
         return userRepository.save(users);
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     @Transactional
     public User findById(UUID id) {
         User user = userRepository.findOne(id);
@@ -49,9 +50,23 @@ public class UserService extends AbstractService {
     public User findByEmail(String email) {
         User user = userRepository.findByEmail(email);
         //      user.getRoles().size();
+        if (user == null) {
+            return null;
+        }
         user.getContacts().size();
         user.getCourses().size();
         return user;
+    }
+
+    @Transactional
+    public List<User> findByUserType(UserType userType) {
+        List<User> users = userRepository.findByUserType(userType);
+        for (int i = 0; i < users.size(); i++) {
+            //      user.getRoles().size();
+            users.get(i).getContacts().size();
+            users.get(i).getCourses().size();
+        }
+        return users;
     }
 
     @Transactional
@@ -68,13 +83,11 @@ public class UserService extends AbstractService {
     @Transactional
     public User login(String email, String password) {
         User user = userRepository.findByEmailAndPassword(email, password);
-        user.getContacts().size();
-        user.getCourses().size();
-
-
         if (user == null) {
             return null;
         }
+        user.getContacts().size();
+        user.getCourses().size();
         return user;
 
     }
@@ -83,12 +96,11 @@ public class UserService extends AbstractService {
     @Transactional
     public User signUp(UUID id, String email, String password,
                        String firstName, String lastName, String address,
-                       String description, UserType userType,
-                       Boolean active) {
+                       String description, UserType userType) {
 
         User user = userRepository.save(User.builder().id(id).email(email).password(password).
                 firstName(firstName).lastName(lastName).address(address).
-                description(description).userType(userType).active(active).build());
+                description(description).userType(userType).build());
 
 //        user.getContacts().size();
         //      user.getCourses().size();

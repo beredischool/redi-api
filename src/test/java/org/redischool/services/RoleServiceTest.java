@@ -1,6 +1,5 @@
 package org.redischool.services;
 
-import org.hibernate.validator.constraints.Range;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +13,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by raouf on 1/20/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class RoleServiceTest {
 
     @Autowired

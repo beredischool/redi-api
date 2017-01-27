@@ -15,20 +15,20 @@ import java.util.UUID;
 @Service
 public class RoleService extends AbstractService {
 
-    private final RoleRepository repository;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public RoleService(RoleRepository repository) {
-        this.repository = repository;
+        this.roleRepository = repository;
     }
 
     @Transactional(readOnly = true)
     public Role findById(UUID id) {
-        return repository.findOne(id);
+        return roleRepository.findOne(id);
     }
 
     @Transactional(readOnly = true)
     public List<Role> findAll() {
-        return repository.findAll();
+        return roleRepository.findAll();
     }
 }
