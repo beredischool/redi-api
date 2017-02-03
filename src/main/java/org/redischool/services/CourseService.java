@@ -31,8 +31,8 @@ public class CourseService extends AbstractService {
     }
 
     @Transactional
-    public List<Course> save(List<Course> users) {
-        return courseRepository.save(users);
+    public List<Course> save(List<Course> courses) {
+        return courseRepository.save(courses);
     }
 
 

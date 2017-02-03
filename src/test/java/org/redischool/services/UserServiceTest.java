@@ -118,7 +118,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void shouldSuccesfulReturnFirstPage() {
+    public void shouldSuccessfulReturnFirstPage() {
         for (int i = 0; i < 10; i++)
             repository.save(User.builder().id(userService.generateId())
                     .userType(UserType.STUDENT)

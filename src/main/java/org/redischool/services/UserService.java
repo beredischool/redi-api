@@ -1,6 +1,7 @@
 package org.redischool.services;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.redischool.models.Course;
 import org.redischool.models.User;
 import org.redischool.models.UserType;
 import org.redischool.services.repositories.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -107,4 +109,12 @@ public class UserService extends AbstractService {
 
         return user;
     }
+
+    @Transactional
+    public User apply(UUID id, Set<Course> courseSet) {
+        User user = userRepository.findOne(id);
+        user.setCourses(courseSet);
+        return userRepository.save(user);
+    }
+
 }

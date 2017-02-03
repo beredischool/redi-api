@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"id"})
 @Builder(toBuilder = true)
 @Getter
+@Setter
 public class User {
 
     @Id
