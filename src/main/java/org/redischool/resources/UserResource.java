@@ -1,6 +1,7 @@
 package org.redischool.resources;
 
 import org.redischool.models.User;
+import org.redischool.models.UserCourse;
 import org.redischool.models.UserType;
 import org.redischool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -72,6 +75,15 @@ public class UserResource {
 
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("userType")
+    public Response getUserByUserType(@QueryParam("userType") UserType userType) {
+        return Response.ok().entity(userService.findByUserType(userType)).build();
+    }
+
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("AllUsers")
     @GET
     public Response getAllUsers(@QueryParam("page") final int page, @QueryParam("size") final int size) {
@@ -100,12 +112,15 @@ public class UserResource {
                            @FormParam("firstName") final String firstName, @FormParam("lastName") final String lastName,
                            @FormParam("address") final String address,
                            @FormParam("description") final String description, @FormParam("userType") final UserType userType,
-                           @FormParam("active") final Boolean active) {
+                           @FormParam("passwordConfirm") final String passwordConfirm) {
 
+        if (!password.equals(passwordConfirm)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         UUID id = userService.generateId();
 
         User user = userService.signUp(id, email, password, firstName, lastName, address,
-                description, userType, active);
+                description, userType);
 
         if (user == null) {
             return Response.serverError().build();
@@ -115,5 +130,17 @@ public class UserResource {
 
     }
 
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("apply/{id}")
+    @PUT
+    public Response Apply(@PathParam("id") UUID id, Set<UUID> courseSet) {
+        List<UserCourse> user1 = userService.apply(id, courseSet);
+        if (user1 == null) {
+            return Response.serverError().build();
+        }
+        return Response.ok().entity(user1).build();
+    }
 }
 

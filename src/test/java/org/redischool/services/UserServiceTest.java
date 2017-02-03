@@ -16,12 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by aurel on 16/01/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class UserServiceTest {
 
     @Autowired
@@ -92,8 +94,31 @@ public class UserServiceTest {
         Assert.assertThat(user1, Matchers.equalTo(user));
     }
 
+
     @Test
-    public void shouldSuccesfulReturnFirstPage() {
+    public void shouldFindByUserType() {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            users.add(User.builder().id(userService.generateId())
+                    .userType(UserType.STUDENT)
+                    .address("Address")
+                    .birthDate(LocalDate.of(1978, 8, 2))
+                    .description("Test")
+                    .email("aemail1@" + i + "gmail.com")
+                    .password("password")
+                    .firstName("Alaa")
+                    .lastName("Aloush")
+                    .build());
+        }
+
+        repository.save(users);
+        List<User> users1 = userService.findByUserType(UserType.STUDENT);
+        Assert.assertThat(users1, Matchers.equalTo(users));
+    }
+
+
+    @Test
+    public void shouldSuccessfulReturnFirstPage() {
         for (int i = 0; i < 10; i++)
             repository.save(User.builder().id(userService.generateId())
                     .userType(UserType.STUDENT)
