@@ -4,6 +4,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.redischool.models.Course;
 import org.redischool.services.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,14 +51,14 @@ public class CourseService extends AbstractService {
 
 
     @Transactional
-    public List<Course> findByName(String couName) {
-        List<Course> courses = courseRepository.findByName(couName);
+    public Course findByName(String couName) {
+        Course courses = courseRepository.findByName(couName);
         return courses;
     }
 
 
     @Transactional
-    public Course findByURL(String url) {
+    public Course findByUrl(String url) {
         Course course = courseRepository.findByUrl(url);
         if (course == null) {
             return null;
@@ -65,4 +67,17 @@ public class CourseService extends AbstractService {
         course.getSessions().size();
         return course;
     }
+
+
+    @Transactional
+    public Page<Course> findAll(Pageable pageable) {
+        Page<Course> courses = courseRepository.findAll(pageable);
+
+        for (int i = 0; i < courses.getContent().size(); i++) {
+            courses.getContent().get(i).getSessions().size();
+            courses.getContent().get(i).getUsers().size();
+        }
+        return courses;
+    }
+
 }

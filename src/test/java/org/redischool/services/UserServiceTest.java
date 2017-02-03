@@ -42,35 +42,31 @@ public class UserServiceTest {
         repository.deleteAll();
     }
 
-    @Test
-    public void shouldSaveUserSuccessful() throws Exception {
-        User user = User.builder().id(userService.generateId())
+
+    private User createUser() {
+        return User.builder().id(userService.generateId())
                 .userType(UserType.STUDENT)
                 .address("Address")
                 .birthDate(LocalDate.of(1978, 8, 2))
                 .description("Test")
-                .email("aemail@gmail.com")
+                .email("aemail" + Math.random() + "@gmail.com")
                 .password("password")
                 .firstName("Alaa")
                 .lastName("Aloush")
                 .build();
+    }
+
+
+    @Test
+    public void shouldSaveUserSuccessful() throws Exception {
+        User user = createUser();
         User savedUser = userService.save(user);
         Assert.assertThat(savedUser, Matchers.equalTo(user));
     }
 
     @Test
     public void shouldFindById() {
-        User user = User.builder().id(userService.generateId())
-                .userType(UserType.STUDENT)
-                .address("Address")
-                .birthDate(LocalDate.of(1978, 8, 2))
-                .description("Test")
-                .email("aemail1@gmail.com")
-                .password("password")
-                .firstName("Alaa")
-                .lastName("Aloush")
-                .build();
-
+        User user = createUser();
         userService.save(user);
         User user1 = userService.findById(user.getId());
         Assert.assertThat(user, Matchers.equalTo(user1));
@@ -78,19 +74,9 @@ public class UserServiceTest {
 
     @Test
     public void shouldFindByEmail() {
-        User user = User.builder().id(userService.generateId())
-                .userType(UserType.STUDENT)
-                .address("Address")
-                .birthDate(LocalDate.of(1978, 8, 2))
-                .description("Test")
-                .email("aemail1@gmail.com")
-                .password("password")
-                .firstName("Alaa")
-                .lastName("Aloush")
-                .build();
-
-        repository.save(user);
-        User user1 = userService.findByEmail("aemail1@gmail.com");
+        User user = createUser();
+        userService.save(user);
+        User user1 = userService.findByEmail(user.getEmail());
         Assert.assertThat(user1, Matchers.equalTo(user));
     }
 
@@ -99,16 +85,7 @@ public class UserServiceTest {
     public void shouldFindByUserType() {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            users.add(User.builder().id(userService.generateId())
-                    .userType(UserType.STUDENT)
-                    .address("Address")
-                    .birthDate(LocalDate.of(1978, 8, 2))
-                    .description("Test")
-                    .email("aemail1@" + i + "gmail.com")
-                    .password("password")
-                    .firstName("Alaa")
-                    .lastName("Aloush")
-                    .build());
+            users.add(createUser());
         }
 
         repository.save(users);
@@ -120,16 +97,7 @@ public class UserServiceTest {
     @Test
     public void shouldSuccessfulReturnFirstPage() {
         for (int i = 0; i < 10; i++)
-            repository.save(User.builder().id(userService.generateId())
-                    .userType(UserType.STUDENT)
-                    .address("Address")
-                    .birthDate(LocalDate.of(1978, 8, 2))
-                    .description("Test")
-                    .email("aemail1" + i + "@gmail.com")
-                    .password("password")
-                    .firstName("Alaa")
-                    .lastName("Aloush")
-                    .build());
+            repository.save(createUser());
         Page<User> users = userService.findAll(new PageRequest(0, 5));
         Assert.assertThat(users,
                 Matchers.allOf(

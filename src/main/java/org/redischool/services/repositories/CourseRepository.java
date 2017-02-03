@@ -3,7 +3,6 @@ package org.redischool.services.repositories;
 import org.redischool.models.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -11,7 +10,7 @@ import java.util.UUID;
  */
 public interface CourseRepository extends JpaRepository<Course, UUID> {
 
-    List<Course> findByName(String name);
+    Course findByName(String name);
 
     Course findByUrl(String url);
 
