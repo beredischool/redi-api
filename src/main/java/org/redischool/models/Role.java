@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.inject.Named;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -29,6 +30,7 @@ public class Role {
     @Column(name = "ID")
     private UUID id;
 
+    @Named
     @Column(name = "NAME")
     private String name;
 
