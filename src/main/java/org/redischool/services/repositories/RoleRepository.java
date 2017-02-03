@@ -9,4 +9,5 @@ import java.util.UUID;
  * Created by raouf on 1/20/17.
  */
 public interface RoleRepository extends JpaRepository<Role, UUID> {
+    public Role findByName(String name);
 }

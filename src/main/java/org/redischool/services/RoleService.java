@@ -31,4 +31,8 @@ public class RoleService extends AbstractService {
     public List<Role> findAll() {
         return repository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public Role findByName(String name){return repository.findByName(name);}
+
 }
