@@ -34,6 +34,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-jersey')
 	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+	compile('org.springframework.boot:spring-boot-starter-activemq')
 	runtime('mysql:mysql-connector-java')
 	compileOnly('org.projectlombok:lombok')
 	compileOnly('com.google.code.findbugs:annotations:3.0.1')

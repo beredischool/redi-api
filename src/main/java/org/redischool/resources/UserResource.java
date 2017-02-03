@@ -1,7 +1,7 @@
 package org.redischool.resources;
 
-import org.redischool.models.Course;
 import org.redischool.models.User;
+import org.redischool.models.UserCourse;
 import org.redischool.models.UserType;
 import org.redischool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -134,8 +135,8 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("apply/{id}")
     @PUT
-    public Response Apply(@PathParam("id") UUID id, Set<Course> courseSet) {
-        User user1 = userService.apply(id, courseSet);
+    public Response Apply(@PathParam("id") UUID id, Set<UUID> courseSet) {
+        List<UserCourse> user1 = userService.apply(id, courseSet);
         if (user1 == null) {
             return Response.serverError().build();
         }

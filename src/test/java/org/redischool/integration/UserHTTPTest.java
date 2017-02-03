@@ -1,5 +1,6 @@
 package org.redischool.integration;
 
+import jersey.repackaged.com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +24,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by ReDI on 1/20/2017.
@@ -289,7 +291,7 @@ public class UserHTTPTest {
         WebTarget target = client.target(sign_up_url);
 
         Form form = new Form();
-        form.param("email", "sbaihi.alaa@gmail.com");
+        form.param("email", "sbaihi.alaa111000@gmail.com");
         form.param("password", "1234");
         form.param("firstName", "Alaa");
         form.param("lastName", "SBAIHI");
@@ -320,13 +322,14 @@ public class UserHTTPTest {
         System.out.println("step1" + courseSet.iterator().next().getId().toString());
         System.out.println("step1" + courseSet.iterator().next().getId().toString());
 
-        List courseList = new ArrayList<>(courseSet);
-        courseList = courseService.save(courseList);
+        List<Course> courseList = courseService.save(Lists.newArrayList(courseSet));
 
-        user.setCourses(courseSet);
+        Set<UUID> coursesID = courseList.stream().map(c -> c.getId())
+                .collect(Collectors.toSet());
 
 
-        Response response1 = target.request(MediaType.APPLICATION_JSON).put(Entity.json(courseSet));
+        Response response1 = target.request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(coursesID));
         Assert.assertEquals(200, response1.getStatus());
 
 
