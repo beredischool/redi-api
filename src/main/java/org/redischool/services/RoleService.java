@@ -33,6 +33,6 @@ public class RoleService extends AbstractService {
     }
 
     @Transactional(readOnly = true)
-    public Role findByName(String name){return repository.findByName(name);}
+    public Role findByName(String name){return roleRepository.findByName(name);}
 
 }
