@@ -23,10 +23,10 @@ import static org.junit.Assert.assertEquals;
 public class RoleServiceTest {
 
     @Autowired
-    private RoleRepository repository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private RoleService service;
+    private RoleService roleService;
 
     @Before
     public void setUp() throws Exception {
@@ -35,24 +35,25 @@ public class RoleServiceTest {
 
     @After
     public void tearDown() throws Exception {
-        repository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     @Test
     public void shouldFindRoleById() throws Exception {
-        UUID id = service.generateId();
-        repository.save(Role.builder().id(id)
+        UUID id = roleService.generateId();
+        roleRepository.save(Role.builder().id(id)
                 .name("ADMIN").build());
-        Role role = service.findById(id);
+        Role role = roleService.findById(id);
         assertEquals("ADMIN", role.getName());
     }
+
     @Test
     public void findAll() throws Exception {
-        for(int i=0 ; i<10 ;i++){
-            repository.save(Role.builder().id(service.generateId())
-                    .name("ADMIN"+i).build());
+        for (int i = 0; i < 10; i++) {
+            roleRepository.save(Role.builder().id(roleService.generateId())
+                    .name("ADMIN" + i).build());
         }
-        List<Role> roles = service.findAll();
+        List<Role> roles = roleService.findAll();
         assertEquals(10, roles.size());
 
     }

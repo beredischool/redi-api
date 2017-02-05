@@ -65,4 +65,12 @@ public class CourseResources {
         return Response.ok().entity(courseService.findByName(name)).build();
     }
 
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("url")
+    public Response getUserByUrl(@QueryParam("url") String url) {
+        return Response.ok().entity(courseService.findByUrl(url)).build();
+    }
 }

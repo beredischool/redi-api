@@ -3,6 +3,7 @@ package org.redischool.rest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.redischool.resources.CourseResources;
+import org.redischool.resources.RoleResource;
 import org.redischool.resources.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,9 @@ public class JerseyConfig extends ResourceConfig {
         property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
         register(UserResource.class);
         register(CourseResources.class);
+        register(RoleResource.class);
+        //register(UserCourseResource.class);
+
         //packages("org.redischool.resources");
     }
 }

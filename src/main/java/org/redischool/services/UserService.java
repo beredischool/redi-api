@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by aurel on 16/01/17.
  */
+
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
 @Service
 public class UserService extends AbstractService {
@@ -117,8 +118,8 @@ public class UserService extends AbstractService {
     }
 
     @Transactional
-    public List<UserCourse> apply(UUID id, Set<UUID> courses) {
-        Set<UserCourse> userCourses = courses.stream().map(c ->
+    public List<UserCourse> apply(UUID id, Set<UUID> courseIdsSet) {
+        List<UserCourse> userCourses = courseIdsSet.stream().map(c ->
                 UserCourse
                         .builder()
                         .courseId(c)
@@ -126,7 +127,7 @@ public class UserService extends AbstractService {
                         .id(generateId())
                         .courseStatus(CourseStatus.APPLIED)
                         .build())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         return userCourseRepository.save(userCourses);
     }
 

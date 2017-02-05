@@ -1,11 +1,14 @@
 package org.redischool.resources;
 
+import org.redischool.models.CourseStatus;
 import org.redischool.models.User;
 import org.redischool.models.UserCourse;
 import org.redischool.models.UserType;
+import org.redischool.services.UserCourseService;
 import org.redischool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.jms.core.JmsTemplate;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -31,10 +34,15 @@ public class UserResource {
 
     private final UserService userService;
 
+    private final UserCourseService userCourseService;
+
+    private final JmsTemplate jmsTemplate;
 
     @Autowired
-    public UserResource(UserService userService) {
+    public UserResource(UserService userService, UserCourseService userCourseService, JmsTemplate jmsTemplate) {
         this.userService = userService;
+        this.userCourseService = userCourseService;
+        this.jmsTemplate = jmsTemplate;
     }
 
 
@@ -135,12 +143,32 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("apply/{id}")
     @PUT
-    public Response Apply(@PathParam("id") UUID id, Set<UUID> courseSet) {
-        List<UserCourse> user1 = userService.apply(id, courseSet);
-        if (user1 == null) {
+    public Response apply(@PathParam("id") UUID id, Set<UUID> courseIdsSet) {
+        List<UserCourse> userCourseList = userService.apply(id, courseIdsSet);
+        if (userCourseList == null) {
             return Response.serverError().build();
         }
-        return Response.ok().entity(user1).build();
+        return Response.ok().entity(userCourseList).build();
     }
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("course/{id}")
+    @PUT
+    public Response changeStatus(@PathParam("id") UUID id, UserCourse userCourse) {
+        UserCourse currentUserCourse = userCourseService.findById(id);
+
+        if (userCourse.getCourseStatus().equals(CourseStatus.APPROVED) &&
+                currentUserCourse.getCourseStatus().equals(CourseStatus.APPLIED)) {
+
+
+            jmsTemplate.convertAndSend("activate", userCourse);
+
+        }
+        userCourseService.save(userCourse);
+        return Response.ok().entity(userCourse).build();
+
+    }
+
 }
 

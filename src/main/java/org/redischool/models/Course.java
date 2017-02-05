@@ -31,7 +31,6 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"id"})
 @Builder(toBuilder = true)
 @Getter
-
 public class Course {
 
     @Id

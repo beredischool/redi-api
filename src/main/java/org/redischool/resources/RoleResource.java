@@ -3,7 +3,12 @@ package org.redischool.resources;
 import org.redischool.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
@@ -23,7 +28,7 @@ public class RoleResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}")
     @GET
-    public Response getRoleByID(@PathParam("id")UUID uuid){
+    public Response getRoleByID(@PathParam("id") UUID uuid) {
         return Response.ok().entity(roleService.findById(uuid)).build();
     }
 
@@ -31,7 +36,7 @@ public class RoleResource {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("name")
-    public Response getRoleByName(@QueryParam("name") String name){
+    public Response getRoleByName(@QueryParam("name") String name) {
         return Response.ok().entity(roleService.findByName(name)).build();
 
     }
@@ -39,7 +44,7 @@ public class RoleResource {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("findAll")
-    public Response getAllRoles (){
+    public Response getAllRoles() {
         return Response.ok().entity(roleService.findAll()).build();
     }
 

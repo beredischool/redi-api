@@ -11,7 +11,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.UUID;
+
 
 /**
  * Created by ReDI on 1/29/2017.
@@ -23,7 +25,7 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"id"})
 @Builder(toBuilder = true)
 @Getter
-public class UserCourse {
+public class UserCourse implements Serializable {
 
     @Id
     @Column(name = "ID")

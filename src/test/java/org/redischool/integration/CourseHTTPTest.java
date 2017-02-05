@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.redischool.App;
 import org.redischool.models.Course;
 import org.redischool.services.CourseService;
+import org.redischool.services.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,9 @@ public class CourseHTTPTest {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private CourseRepository repository;
+
     private String basic_url = null;
 
 
@@ -48,7 +52,7 @@ public class CourseHTTPTest {
 
     @After
     public void tearDown() throws Exception {
-
+        repository.deleteAll();
     }
 
     public Course createCourse(String name) {
@@ -132,5 +136,31 @@ public class CourseHTTPTest {
         Assert.assertEquals(200, response.getStatus());
     }
 
+
+    @Test
+    public void shouldExecuteSuccessfulGetByUrl() {
+
+        Course course = createCourse("Java3");
+
+        String put_url = basic_url + course.getId().toString();
+        String url_url = basic_url + "url/";
+
+        //post
+        WebTarget target = client.target(basic_url);
+        Response response = target.request().post(Entity.entity(course, MediaType.APPLICATION_JSON));
+        Assert.assertEquals(201, response.getStatus());
+        String locationHeader = response.getHeaders().getFirst("Location").toString();
+        Assert.assertTrue(locationHeader.endsWith(response.readEntity(String.class)));
+
+        //put
+        target = client.target(put_url);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(course));
+        Assert.assertEquals(200, response.getStatus());
+
+        //get
+        target = client.target(url_url);
+        response = target.queryParam("url", course.getUrl()).request(MediaType.APPLICATION_JSON).get();
+        Assert.assertEquals(200, response.getStatus());
+    }
 
 }

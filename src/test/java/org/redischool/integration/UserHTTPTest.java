@@ -7,9 +7,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redischool.App;
 import org.redischool.models.Course;
+import org.redischool.models.CourseStatus;
 import org.redischool.models.User;
+import org.redischool.models.UserCourse;
 import org.redischool.models.UserType;
 import org.redischool.services.CourseService;
+import org.redischool.services.UserCourseService;
 import org.redischool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -22,8 +25,10 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,13 +44,18 @@ import java.util.stream.Collectors;
 public class UserHTTPTest {
 
     Client client = ClientBuilder.newClient();
+
     @LocalServerPort
     private int port;
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private UserCourseService userCourseService;
 
     private String basic_url = null;
 
@@ -303,8 +313,6 @@ public class UserHTTPTest {
         Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
         User user = response.readEntity(User.class);
 
-        System.out.println("step1" + user.getId().toString());
-
         Assert.assertEquals(200, response.getStatus());
 
         String apply_url = basic_url + "apply/" + user.getId().toString();
@@ -318,21 +326,126 @@ public class UserHTTPTest {
         courseSet.add(Course.builder().id(userService.generateId()).name("JAVA").build());
         courseSet.add(Course.builder().id(userService.generateId()).name("C++").build());
 
-        System.out.println("step1" + courseSet.iterator().next().getId().toString());
-        System.out.println("step1" + courseSet.iterator().next().getId().toString());
-        System.out.println("step1" + courseSet.iterator().next().getId().toString());
-
         List<Course> courseList = courseService.save(Lists.newArrayList(courseSet));
 
-        Set<UUID> coursesID = courseList.stream().map(c -> c.getId())
+        Set<UUID> coursesIds = courseList.stream().map(c -> c.getId())
                 .collect(Collectors.toSet());
 
 
-        Response response1 = target.request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(coursesID));
-        Assert.assertEquals(200, response1.getStatus());
+        response = target.request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(coursesIds));
+        Assert.assertEquals(200, response.getStatus());
 
 
     }
 
+    @Test
+    public void shouldDoChangeStatusAndSendMessageSuccessful() throws InterruptedException {
+        String sign_up_url = basic_url + "sign_up/";
+
+        //sign up
+        WebTarget target = client.target(sign_up_url);
+
+        Form form = new Form();
+        form.param("email", "sbaihi.alaa111088@gmail.com");
+        form.param("password", "1234");
+        form.param("firstName", "Alaa");
+        form.param("lastName", "SBAIHI");
+        form.param("address", "Pestalozzistr 6, 10625 Berlin");
+        form.param("description", "lerner");
+        form.param("userType", UserType.STUDENT.toString());
+        form.param("passwordConfirm", "1234");
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+        User user = response.readEntity(User.class);
+
+        Assert.assertEquals(200, response.getStatus());
+
+        String apply_url = basic_url + "apply/" + user.getId().toString();
+
+        //apply
+        target = client.target(apply_url);
+
+        Set<Course> courseSet = new HashSet<>();
+
+        courseSet.add(Course.builder().id(userService.generateId()).name("Android Development").build());
+        courseSet.add(Course.builder().id(userService.generateId()).name("JAVA Development").build());
+        courseSet.add(Course.builder().id(userService.generateId()).name("C++ Development").build());
+
+
+        List<Course> courseList = courseService.save(Lists.newArrayList(courseSet));
+
+        System.out.println("Courses:");
+        System.out.println(courseList.get(0).getId().toString() + ":" + courseList.get(0).getName().toString());
+        System.out.println(courseList.get(1).getId().toString() + ":" + courseList.get(1).getName().toString());
+        System.out.println(courseList.get(2).getId().toString() + ":" + courseList.get(2).getName().toString());
+        System.out.println("User:");
+        System.out.println(user.getId().toString() + ":" + user.getFirstName().toString());
+
+        Set<UUID> coursesIds = courseList.stream().map(c -> c.getId())
+                .collect(Collectors.toSet());
+
+
+        response = target.request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(coursesIds));
+        Assert.assertEquals(200, response.getStatus());
+
+
+        //Change Status
+        List<UserCourse> userCourseList = response.readEntity(new GenericType<List<UserCourse>>() {
+        });
+
+        userCourseList = userCourseService.save(userCourseList);
+
+        System.out.println("The applied Courses:" + userCourseList.size());
+
+        UserCourse userCourse = userCourseList.get(0);
+
+        System.out.println("User Course: The applied Courses:");
+        System.out.println("user course id: " + userCourseList.get(0).getId().toString());
+        System.out.println("course id: " + userCourseList.get(0).getCourseId().toString());
+        System.out.println("user id: " + userCourseList.get(0).getUserId().toString());
+        System.out.println("course status: " + userCourseList.get(0).getCourseStatus().toString());
+
+        String change_status_url = basic_url + "course/" + userCourse.getId().toString();
+
+        target = client.target(change_status_url);
+
+        response = target.request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(userCourse.toBuilder()
+                        .courseStatus(CourseStatus.APPROVED)
+                        .build(), MediaType.APPLICATION_JSON));
+        Assert.assertEquals(200, response.getStatus());
+
+        Thread.currentThread().sleep(5000);
+
+        userCourse = response.readEntity(UserCourse.class);
+        userCourse = userCourseService.findById(userCourse.getId());
+        User user1 = userService.findById(userCourse.getUserId());
+
+        Course course = courseService.findById(userCourse.getCourseId());
+
+        System.out.println("user course id after response: " + userCourse.getId().toString());
+        System.out.println("status: " + userCourse.getCourseStatus().toString());
+        System.out.println("user: " + user1.getId().toString() + " :" + user1.getFirstName());
+
+        List<Course> courses = new ArrayList<>(user1.getCourses());
+
+        System.out.println("courses in user: " + courses.size());
+
+        for (int i = 0; i < courses.size(); i++) {
+            System.out.println(courses.get(i).toString() + " :" + courses.get(i).getName());
+        }
+
+        System.out.println(course.getId().toString() + " :" + course.getName());
+
+        List<User> users = new ArrayList<>(course.getUsers());
+
+        System.out.println("users in course: " + users.size());
+
+        for (int i = 0; i < users.size(); i++) {
+            System.out.println(users.get(i).toString() + " :" + users.get(i).getFirstName());
+        }
+    }
 }
+

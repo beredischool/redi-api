@@ -51,9 +51,15 @@ public class CourseService extends AbstractService {
 
 
     @Transactional
-    public Course findByName(String couName) {
-        Course courses = courseRepository.findByName(couName);
-        return courses;
+    public Course findByName(String name) {
+        Course course = courseRepository.findByName(name);
+        if (course == null) {
+            return null;
+        }
+        course.getUsers().size();
+        course.getSessions().size();
+        return course;
+
     }
 
 

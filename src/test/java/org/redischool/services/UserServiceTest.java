@@ -30,7 +30,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +39,7 @@ public class UserServiceTest {
 
     @After
     public void tearDown() throws Exception {
-        repository.deleteAll();
+        userRepository.deleteAll();
     }
 
 
@@ -88,7 +88,7 @@ public class UserServiceTest {
             users.add(createUser());
         }
 
-        repository.save(users);
+        userRepository.save(users);
         List<User> users1 = userService.findByUserType(UserType.STUDENT);
         Assert.assertThat(users1, Matchers.equalTo(users));
     }
@@ -97,7 +97,7 @@ public class UserServiceTest {
     @Test
     public void shouldSuccessfulReturnFirstPage() {
         for (int i = 0; i < 10; i++)
-            repository.save(createUser());
+            userRepository.save(createUser());
         Page<User> users = userService.findAll(new PageRequest(0, 5));
         Assert.assertThat(users,
                 Matchers.allOf(
