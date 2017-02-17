@@ -6,6 +6,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 </head>
 <body>
+<div id ="main" class="container">
 <form class="form-horizontal" id="register" method="post" action="api/user/sign_up">
     <fieldset>
 
@@ -39,7 +40,7 @@
 
         <!-- Text input-->
         <div class="form-group">
-            <label class="col-md-4 control-label" for="address">Street</label>
+            <label class="col-md-4 control-label" for="address">Address</label>
             <div class="col-md-4">
                 <input id="address" name="address" type="text" placeholder="Enter your address" class="form-control input-md" required="">
 
@@ -48,10 +49,20 @@
 
         <!-- Text input-->
         <div class="form-group">
-            <label class="col-md-4 control-label" for="city">City</label>
+            <label class="col-md-4 control-label" for="userType">Blood Group</label>
             <div class="col-md-4">
-                <input id="city" name="city" type="text" placeholder="Enter your city" class="form-control input-md" required="">
+                <select id="userType" name="userType" class="form-control">
+                    <option value="STUDENT">Student</option>
+                    <option value="TEACHER">Teacher</option>
+                </select>
+            </div>
+        </div>
 
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="description">Description</label>
+            <div class="col-md-4">
+                <textarea id="description" name="description" placeholder="About you" class="form-control input-md"></textarea>
             </div>
         </div>
 
@@ -65,9 +76,9 @@
         </div>
         <!-- Password input-->
         <div class="form-group">
-            <label class="col-md-4 control-label" for="confirmPassword">Confirm</label>
+            <label class="col-md-4 control-label" for="passwordConfirm">Confirm</label>
             <div class="col-md-4">
-                <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm password" class="form-control input-md" required="">
+                <input id="passwordConfirm" name="passwordConfirm" type="password" placeholder="Confirm password" class="form-control input-md" required="">
 
             </div>
         </div>
@@ -82,8 +93,32 @@
 
     </fieldset>
 </form>
+</div>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js"></script>
 <script src="js/main.js"></script>
+<script id="userListTemplate" type="text/x-jsrender">
+<table class="table">
+    <thead>
+      <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+     {{for content}}
+      <tr>
+        <td>{{:firstName}}</td>
+        <td>{{:lastName}}</td>
+        <td>{{:email}}</td>
+        <td>{{:userType}}</td>
+      </tr>
+      {{/for}}
+    </tbody>
+</table>
+</script>
 </body>
 </html>
