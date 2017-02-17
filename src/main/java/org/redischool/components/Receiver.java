@@ -44,6 +44,5 @@ public class Receiver {
         System.out.println("Received user courses<" + user.getCourses().iterator().next().getName() + ">");
 
         System.out.println("Received <" + userCourse.getId().toString() + ">");
-
     }
 }

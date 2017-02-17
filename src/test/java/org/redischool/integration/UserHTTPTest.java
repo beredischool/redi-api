@@ -61,7 +61,7 @@ public class UserHTTPTest {
 
     @Before
     public void setUp() {
-        basic_url = "http://localhost:" + port + "/api/user/";
+        basic_url = "http://192.168.178.131:" + port + "/api/user/";
     }
 
     User createUser() {
@@ -82,9 +82,11 @@ public class UserHTTPTest {
     @Test
     public void shouldExecuteSuccessfulPost() {
         WebTarget target = client.target(basic_url);
-        Response response = target.request().post(Entity.entity(createUser(), MediaType.APPLICATION_JSON));
+        Response response = target.request().post(null);
+
         Assert.assertEquals(201, response.getStatus());
         String locationHeader = response.getHeaders().getFirst("Location").toString();
+
         Assert.assertTrue(locationHeader.endsWith(response.readEntity(String.class)));
     }
 
@@ -251,7 +253,7 @@ public class UserHTTPTest {
 
     @Test
     public void shouldReturnBadRequestDuringSignUp() {
-        String sign_up_url = basic_url + "sign_up/";
+        String sign_up_url = basic_url + "signUp/";
 
         //sign up
         WebTarget target = client.target(sign_up_url);
@@ -273,7 +275,7 @@ public class UserHTTPTest {
 
     @Test
     public void shouldExecuteSuccessfulSignUp() {
-        String sign_up_url = basic_url + "sign_up/";
+        String sign_up_url = basic_url + "signUp/";
 
         //sign up
         WebTarget target = client.target(sign_up_url);
@@ -295,7 +297,7 @@ public class UserHTTPTest {
 
     @Test
     public void shouldExecuteSuccessfulApply() {
-        String sign_up_url = basic_url + "sign_up/";
+        String sign_up_url = basic_url + "signUp/";
 
         //sign up
         WebTarget target = client.target(sign_up_url);
@@ -341,7 +343,7 @@ public class UserHTTPTest {
 
     @Test
     public void shouldDoChangeStatusAndSendMessageSuccessful() throws InterruptedException {
-        String sign_up_url = basic_url + "sign_up/";
+        String sign_up_url = basic_url + "signUp/";
 
         //sign up
         WebTarget target = client.target(sign_up_url);
@@ -415,21 +417,23 @@ public class UserHTTPTest {
                 .put(Entity.entity(userCourse.toBuilder()
                         .courseStatus(CourseStatus.APPROVED)
                         .build(), MediaType.APPLICATION_JSON));
+
         Assert.assertEquals(200, response.getStatus());
 
-        Thread.currentThread().sleep(5000);
+
+        Thread.sleep(5000);
 
         userCourse = response.readEntity(UserCourse.class);
-        userCourse = userCourseService.findById(userCourse.getId());
-        User user1 = userService.findById(userCourse.getUserId());
+
+        user = userService.findById(userCourse.getUserId());
 
         Course course = courseService.findById(userCourse.getCourseId());
 
         System.out.println("user course id after response: " + userCourse.getId().toString());
         System.out.println("status: " + userCourse.getCourseStatus().toString());
-        System.out.println("user: " + user1.getId().toString() + " :" + user1.getFirstName());
+        System.out.println("user: " + user.getId().toString() + " :" + user.getFirstName());
 
-        List<Course> courses = new ArrayList<>(user1.getCourses());
+        List<Course> courses = new ArrayList<>(user.getCourses());
 
         System.out.println("courses in user: " + courses.size());
 
@@ -446,6 +450,9 @@ public class UserHTTPTest {
         for (int i = 0; i < users.size(); i++) {
             System.out.println(users.get(i).toString() + " :" + users.get(i).getFirstName());
         }
+
+
     }
+
 }
 

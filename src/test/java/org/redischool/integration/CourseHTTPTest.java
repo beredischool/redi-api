@@ -19,6 +19,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -162,5 +163,23 @@ public class CourseHTTPTest {
         response = target.queryParam("url", course.getUrl()).request(MediaType.APPLICATION_JSON).get();
         Assert.assertEquals(200, response.getStatus());
     }
+
+
+    @Test
+    public void shouldReturnBadRequestDuringSignUp() {
+        String add_course_url = basic_url + "add/";
+
+        //add course
+        WebTarget target = client.target(add_course_url);
+
+        Form form = new Form();
+        form.param("name", "Java");
+        form.param("description", "Backend");
+        form.param("url", "www.redi-school.org/Courses/");
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+        Assert.assertEquals(200, response.getStatus());
+    }
+
 
 }

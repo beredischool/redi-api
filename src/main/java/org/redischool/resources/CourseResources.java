@@ -5,6 +5,7 @@ import org.redischool.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -72,5 +73,26 @@ public class CourseResources {
     @Path("url")
     public Response getUserByUrl(@QueryParam("url") String url) {
         return Response.ok().entity(courseService.findByUrl(url)).build();
+    }
+
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("add")
+    @POST
+    public Response addCourse(@FormParam("name") final String name, @FormParam("description") final String description,
+                              @FormParam("url") final String url) {
+
+
+        UUID id = courseService.generateId();
+
+        Course course = courseService.addCourse(id, name, description, url);
+
+        if (course == null) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok(course).build();
+
     }
 }

@@ -103,16 +103,12 @@ public class UserService extends AbstractService {
 
 
     @Transactional
-    public User signUp(UUID id, String email, String password,
-                       String firstName, String lastName, String address,
-                       String description, UserType userType) {
+    public User signUp(UUID id, String firstName, String lastName, UserType userType,
+                       String email, String password, String address, String description) {
 
-        User user = userRepository.save(User.builder().id(id).email(email).password(password).
-                firstName(firstName).lastName(lastName).address(address).
-                description(description).userType(userType).build());
-
-//        user.getContacts().size();
-        //      user.getCourses().size();
+        User user = userRepository.save(User.builder().id(id).firstName(firstName).lastName(lastName).userType(userType).
+                email(email).password(password).address(address).
+                description(description).build());
 
         return user;
     }
