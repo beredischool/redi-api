@@ -6,6 +6,12 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 </head>
 <body>
+<nav>
+    <ul class="nav nav-pills">
+        <li id="nav-reg" role="presentation" class="active"><a href="/">Register</a></li>
+        <li id="nav-users" role="presentation"><a href="#" onclick="listUsers();">Users</a></li>
+    </ul>
+</nav>
 <div id ="main" class="container">
 <form class="form-horizontal" id="register" method="post" action="api/user/sign_up">
     <fieldset>
@@ -49,7 +55,7 @@
 
         <!-- Text input-->
         <div class="form-group">
-            <label class="col-md-4 control-label" for="userType">Blood Group</label>
+            <label class="col-md-4 control-label" for="userType">User Type</label>
             <div class="col-md-4">
                 <select id="userType" name="userType" class="form-control">
                     <option value="STUDENT">Student</option>

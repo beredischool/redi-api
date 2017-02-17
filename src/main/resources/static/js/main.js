@@ -11,7 +11,6 @@ $("#register").submit(function(event){
         data : form_data
     }).done(function(data) {
         listUsers();
-        //$("#server-results").html(response);
     }).fail(function(error) {
         alert("Password confirmation don't match!");
     });
@@ -24,6 +23,7 @@ function listUsers() {
     }).done(function(data) {
         var tmpl = $.templates("#userListTemplate");
         $("#main").html(tmpl.render(data));
-        //$("#server-results").html(response);
+        $("#nav-reg").removeClass('active');
+        $("#nav-users").addClass('active');
     })
 }
