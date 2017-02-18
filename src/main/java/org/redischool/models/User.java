@@ -38,12 +38,6 @@ public class User {
     @Column(name = "ID")
     private UUID id;
 
-    @Column(name = "EMAIL", nullable = false)
-    private String email;
-
-    @Column(name = "PASSWORD", nullable = false)
-    private String password;
-
     @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
 
@@ -53,15 +47,21 @@ public class User {
     @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "USER_TYPE", nullable = false)
+    private UserType userType;
+
+    @Column(name = "EMAIL", nullable = false)
+    private String email;
+
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
+
     @Column(name = "ADDRESS", nullable = false)
     private String address;
 
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "USER_TYPE", nullable = false)
-    private UserType userType;
 
     @Column(name = "ACTIVE")
     private boolean active;

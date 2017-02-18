@@ -68,7 +68,8 @@ public class UserResource {
     @Path("{id}")
     @GET
     public Response getUser(@PathParam("id") UUID id) {
-        return Response.ok().entity(userService.findById(id)).build();
+        User user = userService.findById(id);
+        return Response.ok().entity(user).build();
     }
 
 
@@ -77,7 +78,12 @@ public class UserResource {
     @GET
     @Path("email")
     public Response getUserByEmail(@QueryParam("email") String email) {
-        return Response.ok().entity(userService.findByEmail(email)).build();
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return Response.noContent().build();
+        }
+
+        return Response.ok().entity(user).build();
     }
 
 
@@ -108,33 +114,32 @@ public class UserResource {
         if (user == null) {
             return Response.noContent().build();
         }
-        return Response.ok(user).build();
+        return Response.ok().entity(user).build();
     }
 
 
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("sign_up")
+    @Path("signUp")
     @POST
-    public Response signUp(@FormParam("email") final String email, @FormParam("password") final String password,
-                           @FormParam("firstName") final String firstName, @FormParam("lastName") final String lastName,
-                           @FormParam("address") final String address,
-                           @FormParam("description") final String description, @FormParam("userType") final UserType userType,
-                           @FormParam("passwordConfirm") final String passwordConfirm) {
+    public Response signUp(@FormParam("firstName") final String firstName, @FormParam("lastName") final String lastName,
+                           @FormParam("userType") final UserType userType, @FormParam("email") final String email,
+                           @FormParam("password") final String password, @FormParam("passwordConfirm") final String passwordConfirm,
+                           @FormParam("address") final String address, @FormParam("description") final String description
+    ) {
 
         if (!password.equals(passwordConfirm)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         UUID id = userService.generateId();
 
-        User user = userService.signUp(id, email, password, firstName, lastName, address,
-                description, userType);
+        User user = userService.signUp(id, firstName, lastName, userType, email, password, address, description);
 
         if (user == null) {
             return Response.serverError().build();
         }
 
-        return Response.ok().entity(user).build();
+        return Response.ok(user).build();
 
     }
 
@@ -151,6 +156,7 @@ public class UserResource {
         return Response.ok().entity(userCourseList).build();
     }
 
+
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("course/{id}")
@@ -165,6 +171,7 @@ public class UserResource {
             jmsTemplate.convertAndSend("activate", userCourse);
 
         }
+
         userCourseService.save(userCourse);
         return Response.ok().entity(userCourse).build();
 

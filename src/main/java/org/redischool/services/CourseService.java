@@ -86,4 +86,13 @@ public class CourseService extends AbstractService {
         return courses;
     }
 
+
+    @Transactional
+    public Course addCourse(UUID id, String name, String description, String url) {
+
+        Course course = courseRepository.save(Course.builder().id(id).name(name).description(description).url(url).build());
+
+        return course;
+    }
+
 }
