@@ -61,7 +61,8 @@ public class UserHTTPTest {
 
     @Before
     public void setUp() {
-        basic_url = "http://192.168.178.131:" + port + "/api/user/";
+        // basic_url = "http://192.168.178.131:" + port + "/api/user/";
+        basic_url = "http://localhost:" + port + "/api/user/";
     }
 
     User createUser() {
